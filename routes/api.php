@@ -26,9 +26,16 @@ Route::post('/user/takeModule/{user_id}', [UserModuleApiController::class, 'take
 
 // user get video for module
 Route::get('/user/showVideo/{module_id}', [VideoApiController::class, 'getVideosByModule']);
+Route::get('/user/videos/{video_id}', [VideoApiController::class, 'getVideoById']);
 
 // get questions for module
 Route::get('/user/ModuleQuestions/{module_id}', [QuestionApiController::class, 'getModuleQuestions']);
+
+// hena nta hatgyb el so2al bel egaba 
+Route::get('/user/ModuleQuestionsWithAnswers/{module_id}', [QuestionApiController::class, 'getModuleQuestionsWithAnswers']);
+
+// check users answer  hena nta btb3t el egaba 34an tshof hya sah wla laaaaa +
+Route::post('/user/check-answer/{question_id}/{user_id}', [QuestionApiController::class, 'checkUserAnswer']);
 
 Route::post('/user/UserQuestions', [AnswerApiController::class, 'getUserAnswers']);
 
@@ -94,5 +101,5 @@ Route::get('/users/{user_id}/progress/{module_id}', [ScoreApiController::class, 
 Route::get('/user_modules', [UserModuleApiController::class, 'getUserModules']);
 Route::get('/user_modules/{id}', [UserModuleApiController::class, 'getUserModuleById']);
 
-// Video Routes
+
 

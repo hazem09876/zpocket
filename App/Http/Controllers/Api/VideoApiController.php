@@ -34,6 +34,33 @@ public function AllVideos()
     }
 }
 
+
+
+public function getVideoById($video_id)
+{
+    try {
+        $video = Video::find($video_id);
+        
+        if (!$video) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Video not found'
+            ], 404);
+        }
+        
+        return response()->json([
+            'success' => true,
+            'data' => $video
+        ]);
+        
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to retrieve video',
+            'error' => $e->getMessage()
+        ], 500);
+    }
+}
     // Show a single video (GET /videos/{id})
     
     /**
