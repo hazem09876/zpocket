@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use App\Models\Achievement;
-use App\Models\User; // <-- Add this import!
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class AchievementFactory extends Factory
@@ -13,9 +12,9 @@ class AchievementFactory extends Factory
     public function definition()
     {
         return [
-            'user_id' => User::inRandomOrder()->first()?->user_id ?? 1, // fallback to 1 if no users exist
-            'date_achieved' => $this->faker->date(),
             'description' => $this->faker->sentence(8),
+            'date_achieved' => $this->faker->dateTimeThisMonth(),
+            // user_id set in seeder
         ];
     }
 }

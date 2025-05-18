@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Module extends Model
 {
@@ -12,18 +15,19 @@ class Module extends Model
     protected $primaryKey = 'module_id';
 
     protected $fillable = [
-        'name',
+        'module_name',
         'description',
+        'admin_id'
     ];
 
     // Relationships
 
-    public function videos()
+    public function videos(): HasMany
     {
         return $this->hasMany(Video::class, 'module_id', 'module_id');
     }
 
-    public function questions()
+    public function questions(): HasMany
     {
         return $this->hasMany(Question::class, 'module_id', 'module_id');
     }
@@ -32,19 +36,25 @@ class Module extends Model
     {
     }
 
-    public function feedbacks()
+    public function feedbacks(): HasMany
     {
         return $this->hasMany(Feedback::class, 'module_id', 'module_id');
     }
 
-    public function scores()
+    public function scores(): HasMany
     {
         return $this->hasMany(Score::class, 'module_id', 'module_id');
     }
 
-    public function userModules()
+    public function users(): BelongsToMany
     {
-        return $this->hasMany(UserModule::class, 'module_id', 'module_id');
+        return $this->belongsToMany(User::class, 'user_modules', 'module_id', 'user_id')
+                    ->withTimestamps();
+    }
+
+    public function admin(): BelongsTo
+    {
+        return $this->belongsTo(Admin::class, 'admin_id', 'admin_id');
     }
 }
 

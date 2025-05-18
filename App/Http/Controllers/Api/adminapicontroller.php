@@ -18,21 +18,38 @@ class AdminApiController extends Controller
         return response()->json($records);
     }
 
-    // Get all admins
+    // Get all admins (admin fields only)
     public function getAdmins()
     {
-        $records = Admin::with('user')->get();
-        return response()->json($records);
+        $admins = Admin::all(['admin_id', 'user_id', 'permission', 'created_at', 'updated_at']);
+        return response()->json($admins);
     }
 
-    // Get a single admin by ID
+    // Get a single admin by ID (with nested user info)
     public function getAdminById($id)
     {
-        $record = Admin::with('user')->find($id);
-        if (!$record) {
+        $admin = Admin::with(['user', 'modules'])->find($id);
+        if (!$admin) {
             return response()->json(['message' => 'Admin not found'], 404);
         }
-        return response()->json($record);
+        $result = [
+            'admin_id' => $admin->admin_id,
+            'user_id' => $admin->user_id,
+            'permission' => $admin->permission,
+            'created_at' => $admin->created_at,
+            'updated_at' => $admin->updated_at,
+            'user' => $admin->user ? [
+                'user_id' => $admin->user->user_id,
+                'username' => $admin->user->username,
+                'date_of_birth' => $admin->user->date_of_birth,
+                'email' => $admin->user->email,
+                'created_at' => $admin->user->created_at,
+                'updated_at' => $admin->user->updated_at,
+            ] : null,
+            // Optionally include modules if you want:
+            // 'modules' => $admin->modules,
+        ];
+        return response()->json($result);
     }
 
     /**
@@ -41,41 +58,24 @@ class AdminApiController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function createModule(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255|unique:modules,name',
-            'description' => 'nullable|string'
-        ]);
+   public function createModule(Request $request)
+{
+    $request->validate([
+        'module_name' => 'required|string|max:255',
+        'description' => 'nullable|string',
+        'admin_id' => 'required|exists:admins,admin_id'
+    ]);
+    
+    $validated = $request->only(['module_name', 'description', 'admin_id']);
+    $module = Module::create($validated);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Validation errors',
-                'errors' => $validator->errors()
-            ], 422);
-        }
-
-        try {
-            $module = Module::create([
-                'name' => $request->name,
-                'description' => $request->description
-            ]);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Module created successfully',
-                'data' => $module
-            ], 201);
-
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to create module',
-                'error' => $e->getMessage()
-            ], 500);
-        }
-    }
+    return response()->json([
+        'success' => true,
+        'message' => 'Module created successfully',
+        'data' => $module
+    ]);
+}
+    
 
     /**
      * Remove a module
@@ -83,33 +83,19 @@ class AdminApiController extends Controller
      * @param int $id Module ID
      * @return \Illuminate\Http\JsonResponse
      */
+
     public function removeModule($id)
     {
-        try {
-            $module = Module::find($id);
-
-            if (!$module) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Module not found'
-                ], 404);
-            }
-
-            $module->delete();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Module deleted successfully',
-                'deleted_id' => $id
-            ]);
-
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to delete module',
-                'error' => $e->getMessage()
-            ], 500);
+        $module = Module::find($id);
+        if (!$module) {
+            return response()->json(['message' => 'Module not found'], 404);
         }
+        $module->delete();
+        return response()->json([
+            'success' => true,
+            'message' => 'Module deleted successfully',
+            'deleted_id' => $id
+        ]);
     }
 
     /**
@@ -119,10 +105,6 @@ class AdminApiController extends Controller
      */
     public function getModules()
     {
-        $modules = Module::all();
-        return response()->json([
-            'success' => true,
-            'data' => $modules
-        ]);
+        return response()->json(['success' => true, 'data' => Module::all()]);
     }
 }

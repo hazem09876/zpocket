@@ -16,9 +16,14 @@ use App\Http\Controllers\UserModuleController;
 
 
 // User Routes
-Route::get('/users/{id}', [UserApiController::class, 'getUserById']);
-Route::post('/users/login', [UserApiController::class, 'userLogin']);
+//auth routes
 Route::post('/user', [UserApiController::class, 'createUser']);
+ Route::post('/users/login', [UserApiController::class, 'userLogin']);
+
+Route::middleware('auth:api')->group(function () {
+    Route::get('/users/{id}', [UserApiController::class, 'getUserById']);
+    Route::post('/logout', [UserApiController::class, 'logout']);
+});
 
 Route::get('/user/getModules', [UserModuleApiController::class, 'getModules']);
 Route::post('/user/registerModule/{user_id}', [UserModuleApiController::class, 'registerModule']);
@@ -31,10 +36,10 @@ Route::get('/user/videos/{video_id}', [VideoApiController::class, 'getVideoById'
 // get questions for module
 Route::get('/user/ModuleQuestions/{module_id}', [QuestionApiController::class, 'getModuleQuestions']);
 
-// hena nta hatgyb el so2al bel egaba 
+// get questions and answer 
 Route::get('/user/ModuleQuestionsWithAnswers/{module_id}', [QuestionApiController::class, 'getModuleQuestionsWithAnswers']);
 
-// check users answer  hena nta btb3t el egaba 34an tshof hya sah wla laaaaa +
+// check users answer  
 Route::post('/user/check-answer/{question_id}/{user_id}', [QuestionApiController::class, 'checkUserAnswer']);
 
 Route::post('/user/UserQuestions', [AnswerApiController::class, 'getUserAnswers']);
@@ -95,11 +100,11 @@ Route::get('/scores/user/{user_id}/module/{module_id}/question/{question_id}', [
 // Get progress (optionally filtered by module)
 Route::get('/users/{user_id}/progress', [ScoreApiController::class, 'getUserProgress']);
 Route::get('/users/{user_id}/progress/{module_id}', [ScoreApiController::class, 'getUserProgress']);
-
+Route::get('/users/{user_id}/progress/id/{progress_id}', [ScoreApiController::class, 'getUserProgressById']);
 
 // User Module Routes
 Route::get('/user_modules', [UserModuleApiController::class, 'getUserModules']);
 Route::get('/user_modules/{id}', [UserModuleApiController::class, 'getUserModuleById']);
 
-
-
+// Module Routes
+Route::apiResource('modules', ModuleApiController::class);

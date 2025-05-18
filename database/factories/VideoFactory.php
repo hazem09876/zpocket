@@ -12,9 +12,9 @@ class VideoFactory extends Factory
     public function definition()
     {
         return [
-            'module_id' => null, // set in seeder
-            'embed_code' => '<iframe src="https://www.youtube.com/embed/' . $this->faker->unique()->bothify('video###') . '"></iframe>',
             'title' => $this->faker->sentence(4),
+            'embed_code' => $this->faker->url(),
+            // module_id set in seeder
         ];
     }
 }

@@ -4,6 +4,7 @@ namespace App\Providers;
 use Illuminate\Support\Facades\Route;
 
 use Illuminate\Support\ServiceProvider;
+use App\Http\Middleware\JwtMiddleware;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,7 +20,8 @@ class AppServiceProvider extends ServiceProvider
      * Bootstrap any application services.
      */public function boot(): void
 {
-    Route::middleware('api')
+     Route::aliasMiddleware('jwt.verify', JwtMiddleware::class);
+       Route::middleware(['api'])
         ->prefix('api')
         ->group(base_path('routes/api.php'));
 

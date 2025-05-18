@@ -12,8 +12,7 @@ class UserModuleFactory extends Factory
     public function definition()
     {
         return [
-            'user_id' => null, // set in seeder
-            'module_id' => null, // set in seeder
+            // user_id, module_id set in seeder
         ];
     }
 }

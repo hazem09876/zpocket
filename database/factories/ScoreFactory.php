@@ -12,10 +12,8 @@ class ScoreFactory extends Factory
     public function definition()
     {
         return [
-            'user_id' => null, // set in seeder
-            'module_id' => null, // set in seeder
-            'question_id' => null, // set in seeder
             'grade' => $this->faker->numberBetween(0, 100),
+            // user_id, module_id, question_id set in seeder
         ];
     }
 }

@@ -12,10 +12,9 @@ class AnswerFactory extends Factory
     public function definition()
     {
         return [
-            'question_id' => null, // set in seeder
             'answer_text' => $this->faker->sentence(3),
-            'is_correct' => false, // set in seeder
-            'user_answer' => 0,
+            'is_correct' => false,
+            // question_id, user_id set in seeder
         ];
     }
 }

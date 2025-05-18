@@ -12,8 +12,9 @@ class ModuleFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->words(3, true),
-            'description' => $this->faker->sentence(10),
+            'module_name' => $this->faker->word(),
+            'description' => $this->faker->sentence(),
+            // admin_id is set in seeder
         ];
     }
 }

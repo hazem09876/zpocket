@@ -12,10 +12,10 @@ class UserFactory extends Factory
     public function definition()
     {
         return [
-            'username' => $this->faker->unique()->userName,
-            'email' => $this->faker->unique()->safeEmail,
+            'username' => $this->faker->unique()->userName(),
             'password' => bcrypt('password'),
-            'date_of_birth' => $this->faker->date(),
+            'date_of_birth' => $this->faker->date('Y-m-d', '-18 years'),
+            'email' => $this->faker->unique()->safeEmail(),
         ];
     }
 }

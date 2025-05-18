@@ -12,9 +12,8 @@ class FeedbackFactory extends Factory
     public function definition()
     {
         return [
-            'user_id' => null, // set in seeder
-            'module_id' => null, // set in seeder
             'content' => $this->faker->sentence(12),
+            // user_id, module_id set in seeder
         ];
     }
 }

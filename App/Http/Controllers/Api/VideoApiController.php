@@ -50,8 +50,9 @@ public function getVideoById($video_id)
         
         return response()->json([
             'success' => true,
+            'message' => 'Video retrieved successfully',
             'data' => $video
-        ]);
+        ], 200);
         
     } catch (\Exception $e) {
         return response()->json([

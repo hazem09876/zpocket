@@ -12,9 +12,8 @@ class QuestionFactory extends Factory
     public function definition()
     {
         return [
-            'module_id' => null, // set in seeder
-            'content' => $this->faker->sentence(8),
-            'type' => $this->faker->randomElement(['mcq', 'true_false']),
+            'content' => $this->faker->sentence(10),
+            // module_id is set in seeder
         ];
     }
 }

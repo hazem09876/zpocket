@@ -17,18 +17,13 @@ class UserModule extends Model
     ];
 
     // Relationships
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'user_id');
+    }
 
-    // User.php
-public function modules()
-{
-    return $this->belongsToMany(Module::class, 'user_modules', 'user_id', 'module_id')
-                ->withTimestamps();
-}
-
-// Module.php
-public function users()
-{
-    return $this->belongsToMany(User::class, 'user_modules', 'module_id', 'user_id')
-                ->withTimestamps();
-}
+    public function module()
+    {
+        return $this->belongsTo(Module::class, 'module_id', 'module_id');
+    }
 }
